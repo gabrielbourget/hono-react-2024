@@ -7,6 +7,7 @@
     "dev": "bun --watch src/index.ts"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "latest",
     "bun-types": "latest"
   },
   "peerDependencies": {

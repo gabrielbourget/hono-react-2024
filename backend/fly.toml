@@ -1,0 +1,22 @@
+# fly.toml app configuration file generated for hono-react-2024-thrumming-sun-2103 on 2024-05-11T08:09:08-04:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'hono-react-2024-thrumming-sun-2103'
+primary_region = 'ewr'
+
+[build]
+
+[http_service]
+  internal_port = 3002
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
