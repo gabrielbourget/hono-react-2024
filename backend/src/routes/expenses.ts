@@ -24,7 +24,7 @@ const mockExpenses: TExpense[] = [
   { id: 6, title: "Misc", amount: 50 },
 ];
 
-export const expensesRoute = new Hono()
+export const  expensesRoute = new Hono()
   .get("/", (c) => {
     return c.json({ expenses: mockExpenses });
   })
@@ -43,6 +43,7 @@ export const expensesRoute = new Hono()
   .post("/", async (c) => {
     const data = await c.req.json();
     const expense = createPostSchema.parse(data);
+    mockExpenses.push({ id: mockExpenses.length + 1, ...expense });
     console.log(expense); 
     return c.json(expense);
   })
