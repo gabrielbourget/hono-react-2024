@@ -24,7 +24,7 @@ const mockExpenses: TExpense[] = [
   { id: 6, title: "Misc", amount: 50 },
 ];
 
-export const  expensesRoute = new Hono()
+export const expensesRoute = new Hono()
   .get("/", (c) => {
     return c.json({ expenses: mockExpenses });
   })
