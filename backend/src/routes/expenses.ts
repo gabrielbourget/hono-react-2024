@@ -1,13 +1,14 @@
 import { Hono } from "hono";
 import { z } from "zod";
 
+
 const expenseSchema = z.object({
   id: z.number().int().positive().min(1),
   title: z.string().min(3).max(100),
   amount: z.number().int().positive(),
 });
 
-type TExpense = z.infer<typeof expenseSchema>;
+export type TExpense = z.infer<typeof expenseSchema>;
 
 const createPostSchema = z.object({
   title: z.string(),
