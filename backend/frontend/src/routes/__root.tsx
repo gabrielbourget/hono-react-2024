@@ -17,7 +17,7 @@ export const Route = createRootRouteWithContext<TRouterContext>()({
 
 const Navbar = () => (
   <>
-    <div className="p-2 flex gap-2">
+    <div className="p-2 flex gap-2 max-w-2xl m-auto">
       <Link to="/" className="[&.active]:font-bold">
         Home
       </Link>{' '}
