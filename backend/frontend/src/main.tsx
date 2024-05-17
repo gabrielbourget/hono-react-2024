@@ -5,17 +5,16 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import "./index.css";
 import { routeTree } from './routeTree.gen'
 
-// Create a new router instance
-const router = createRouter({ routeTree })
+const queryClient = new QueryClient();
 
-// Register the router instance for type safety
+const router = createRouter({ routeTree, context: { queryClient }});
+
+// Register the router instance for type safety 
 declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router
   }
 }
-
-const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -23,4 +22,4 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <RouterProvider router={router} />
     </QueryClientProvider>
   </React.StrictMode>,
-)
+);

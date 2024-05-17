@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/src/components/ui/card";
 import { api } from "@/src/lib/api";
-import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute('/')({
   component: Index,
