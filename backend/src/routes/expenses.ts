@@ -1,29 +1,10 @@
 import { Hono } from "hono";
-import { z } from "zod";
 import { getUser } from "@/src/kinde";
 import { db } from "@/src/db/index";
 import { expenses as expensesTable } from "@/src/db/schema/expenses";
 import { and, desc, eq, sum } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
-
-const expenseSchema = z.object({
-  id: z.number().int().positive().min(1),
-  title: z.string().min(3).max(100),
-  amount: z.string(),
-});
-
-export type TExpense = z.infer<typeof expenseSchema>;
-
-const createPostSchema = expenseSchema.omit({ id: true });
-
-const mockExpenses: TExpense[] = [
-  { id: 1, title: "Groceries", amount: "100" },
-  { id: 2, title: "Rent", amount: "1500" },
-  { id: 3, title: "Coffee", amount: "5" },
-  { id: 4, title: "Transportation", amount: "20" },
-  { id: 5, title: "Entertainment", amount: "100" },
-  { id: 6, title: "Misc", amount: "50" },
-];
+import { createExpenseSchema } from "../sharedTypes";
 
 export const expensesRoute = new Hono()
   .get("/", getUser, async (c) => {
@@ -64,7 +45,7 @@ export const expensesRoute = new Hono()
   })
 
 
-  .post("/", getUser, zValidator("json", createPostSchema), async (c) => {
+  .post("/", getUser, zValidator("json", createExpenseSchema), async (c) => {
     const user = c.var.user;
     const expense = c.req.valid("json");
 
