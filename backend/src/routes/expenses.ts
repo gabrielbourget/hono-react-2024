@@ -32,7 +32,7 @@ export const expensesRoute = new Hono()
       .from(expensesTable)
       .where(eq(expensesTable.userId, user.id));
 
-    return c.json({ expenses: mockExpenses });
+    return c.json({ expenses });
   })
 
 

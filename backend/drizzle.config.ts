@@ -1,16 +1,13 @@
 import { Config, defineConfig } from "drizzle-kit";
 
-const { DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME } = process.env;
+const { DATABASE_URL } = process.env;
 
 export default defineConfig({
   schema: "./src/db/schema/index.ts",
-  out: "./src/db/migrations",
+  out: "./drizzle",
   dialect: "postgresql",
   dbCredentials: {
-    host: DATABASE_HOST!,
-    user: DATABASE_USER!,
-    password: DATABASE_PASSWORD!,
-    database: DATABASE_NAME!,
+    url: DATABASE_URL!,
   },
   verbose: true,
   strict: true,
