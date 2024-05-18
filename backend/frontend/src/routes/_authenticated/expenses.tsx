@@ -5,7 +5,7 @@ import {
   Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow
 } from "@/src/components/ui/table";
 import { Skeleton } from '@/src/components/ui/skeleton';
-import type { TExpense } from "@server/routes/expenses";
+import type { TExpense } from "@server/sharedTypes";
 
 const getExpenses = async () => {
   const res = await api.expenses.$get();
@@ -30,6 +30,7 @@ const Expenses = () => {
             <TableHead className="w-[100px]">ID</TableHead>
             <TableHead>Title</TableHead>
             <TableHead>Amount</TableHead>
+            <TableHead>Date</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -40,6 +41,7 @@ const Expenses = () => {
                   <TableCell className="font-medium"><Skeleton className="h-4" /></TableCell>
                   <TableCell><Skeleton className="h-4" /></TableCell>
                   <TableCell><Skeleton className="h-4" /></TableCell>
+                  <TableCell><Skeleton className="h-4" /></TableCell>
                 </TableRow>
               ))
             ) : (
@@ -48,6 +50,7 @@ const Expenses = () => {
                   <TableCell className="font-medium">{expense.id}</TableCell>
                   <TableCell>{expense.title}</TableCell>
                   <TableCell>{expense.amount}</TableCell>
+                  <TableCell>{expense.date.split("T")[0]}</TableCell>
                 </TableRow>
               ))
             )
