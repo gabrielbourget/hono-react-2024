@@ -1,23 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router'
-import { api } from "@/src/lib/api";
 import {
   Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow
 } from "@/src/components/ui/table";
 import { Skeleton } from '@/src/components/ui/skeleton';
-import type { TExpense } from "@server/sharedTypes";
-
-const getExpenses = async () => {
-  const res = await api.expenses.$get();
-  if (!res.ok) throw new Error("Failed to fetch expenses");
-
-  const data = await res.json() as { expenses: TExpense[] }; 
-
-  return data;
-};
+import { getExpensesQueryOptions, loadingCreateExpenseQueryOptions } from '@/src/lib/api';
+import { Button } from '@/src/components/ui/button';
+import { Trash } from 'lucide-react';
 
 const Expenses = () => {
-  const { isPending, data, error } = useQuery({ queryKey: ["get-expenses"], queryFn: getExpenses});
+  const { isPending, data, error } = useQuery(getExpensesQueryOptions);
+  const { data: loadingCreateExpense } = useQuery(loadingCreateExpenseQueryOptions);
   
   if (error) return "Error fetching expenses.";
   
@@ -31,14 +24,27 @@ const Expenses = () => {
             <TableHead>Title</TableHead>
             <TableHead>Amount</TableHead>
             <TableHead>Date</TableHead>
+            <TableHead>Delete</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
+          {
+            loadingCreateExpense?.expense ? (
+              <TableRow>
+                <TableCell className="font-medium"><Skeleton className="h-4" /></TableCell>
+                <TableCell>{loadingCreateExpense?.expense.title}</TableCell>
+                <TableCell>{loadingCreateExpense?.expense.amount}</TableCell>
+                <TableCell>{loadingCreateExpense?.expense.date.split("T")[0]}</TableCell>
+                <TableCell><Skeleton className="h-4" /></TableCell>
+              </TableRow>
+            ) : undefined
+          }
           {
             isPending ? (
               Array(3).fill(0).map((_, i) => (
                 <TableRow key={i}>
                   <TableCell className="font-medium"><Skeleton className="h-4" /></TableCell>
+                  <TableCell><Skeleton className="h-4" /></TableCell>
                   <TableCell><Skeleton className="h-4" /></TableCell>
                   <TableCell><Skeleton className="h-4" /></TableCell>
                   <TableCell><Skeleton className="h-4" /></TableCell>
@@ -51,6 +57,9 @@ const Expenses = () => {
                   <TableCell>{expense.title}</TableCell>
                   <TableCell>{expense.amount}</TableCell>
                   <TableCell>{expense.date.split("T")[0]}</TableCell>
+                  <TableCell>
+                    <Button variant="outline" size="icon" onClick={() => null}><Trash /></Button>
+                  </TableCell>
                 </TableRow>
               ))
             )

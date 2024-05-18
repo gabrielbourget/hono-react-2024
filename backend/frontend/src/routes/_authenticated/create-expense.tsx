@@ -5,10 +5,12 @@ import { Label } from "@/src/components/ui/label";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 import { Calendar } from "@/src/components/ui/calendar"
-import { api } from "@/src/lib/api";
+import { createExpense, getExpensesQueryOptions, loadingCreateExpenseQueryOptions } from "@/src/lib/api";
 import { createExpenseSchema } from "../../../../src/sharedTypes";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Expenses = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const form = useForm({
     validatorAdapter: zodValidator,
@@ -18,10 +20,23 @@ const Expenses = () => {
       date: new Date().toISOString(),
     },
     onSubmit: async ({ value }) => {
-      console.log({ value });
-      const res = await api.expenses.$post({ json: value });
-      if (!res.ok) throw new Error("Failed to create expense");
-      navigate({ to: "/expenses" }); 
+      const existingExpenses = await queryClient.ensureQueryData(getExpensesQueryOptions);
+
+      navigate({ to: "/expenses" });
+
+      queryClient.setQueryData(loadingCreateExpenseQueryOptions.queryKey, { expense: value });
+
+      try {
+        const newExpense = await createExpense({ value });
+        queryClient.setQueryData(getExpensesQueryOptions.queryKey, {
+          ...existingExpenses,
+          expenses: [newExpense, ...existingExpenses.expenses],
+        });
+      } catch (e) {
+        throw new Error("Problem encountered while adding new expense")
+      } finally {
+        queryClient.setQueryData(loadingCreateExpenseQueryOptions.queryKey, {});
+      }
     },
   });
 
