@@ -1,6 +1,9 @@
 import { Hono } from "hono";
 import { z } from "zod";
 import { getUser } from "@/src/kinde";
+import { db } from "@/src/db/index";
+import { expenses as expensesTable } from "@/src/db/schema/expenses";
+import { eq } from "drizzle-orm";
 
 const expenseSchema = z.object({
   id: z.number().int().positive().min(1),
@@ -25,7 +28,12 @@ const mockExpenses: TExpense[] = [
 ];
 
 export const expensesRoute = new Hono()
-  .get("/", getUser, (c) => {
+  .get("/", getUser, async (c) => {
+    const user = c.var.user;
+    const expenses = await db.select()
+      .from(expensesTable)
+      .where(eq(expensesTable.userId, user.id));
+
     return c.json({ expenses: mockExpenses });
   })
   .get("/total-spent", getUser, (c) => {
