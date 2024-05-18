@@ -15,6 +15,13 @@
       "when": 1715996267101,
       "tag": "0001_messy_ogun",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1716045187286,
+      "tag": "0002_dapper_morbius",
+      "breakpoints": true
     }
   ]
 }
